@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.fade-text {
+    display: inline-block; /* Agar animasi dapat diterapkan dengan baik */
+    animation: fade 3s linear infinite; /* Durasi dan jenis animasi */
+}
+
+@keyframes fade {
+    0%, 100% {
+        opacity: 0; /* Tidak terlihat pada awal dan akhir */
+    }
+    50% {
+        opacity: 1; /* Terlihat di tengah animasi */
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-30px);
+    }
+    60% {
+        transform: translateY(-15px);
+    }
+}
+
+.logo-animated {
+    animation: bounce 2s infinite;
+}
+
+.logo-custom {
+    width: 400px; /* Atur lebar sesuai kebutuhan */
+    height: auto; /* Menjaga rasio aspek */
+}
+
+body {
+    background: linear-gradient(to right, #1e3a8a, #ffffff); /* Biru tua ke putih */
+    height: 100vh; /* Mengatur tinggi halaman */
+    margin: 0; /* Menghapus margin default */
+  }
+

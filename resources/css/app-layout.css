@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles to fix the sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0; /* Make it stretch to the bottom */
+    width: 200px; /* Set a fixed width for the sidebar */
+    overflow-y: auto; /* Enable vertical scrolling if needed */
+    background: linear-gradient(to bottom, rgb(99, 99, 255), rgb(244, 244, 244)); /* Gradient background from top to bottom */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: transform 0.3s ease; /* Smooth transition for opening/closing */
+    transform: translateX(0); /* Default position */
+}
+.main-content {
+    margin-left: 200px; /* Leave space for the sidebar */
+    padding: 1rem; /* Add padding for main content */
+    transition: margin-left 0.3s ease; /* Smooth transition for margin */
+}
+
+/* Fixed header styles */
+.header {
+    position: fixed; /* Fixes the header at the top */
+    top: 0;
+    left: 200px; /* Aligns with the sidebar */
+    right: 0; /* Stretches to the right */
+    background: linear-gradient(to right, #306af3, #f7f7f7);
+    color: rgb(0, 0, 0); /* Text color */
+    z-index: 10; /* Ensures it is above other content */
+}
+
+/* Main content padding to avoid overlap with fixed header */
+.main-content {
+    padding-top: 3rem; /* Add top padding to avoid overlap with header */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%; /* Set width to 100% for mobile */
+        height: auto; /* Allow height to adjust */
+        position: absolute; /* Change position to absolute */
+    }
+
+    .sidebar.hidden {
+        transform: translateY(-100%); /* Move sidebar off-screen vertically */
+    }
+
+    .main-content {
+        margin-left: 0; /* Remove margin for mobile */
+    }
+
+    .main-content.sidebar-open {
+        margin-left: 0; /* No margin when sidebar is open */
+    }
+
+    .header {
+        left: 0; /* Align header with the screen on mobile */
+        width: 100%; /* Ensure header takes full width */
+    }
+}
