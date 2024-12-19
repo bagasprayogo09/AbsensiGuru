@@ -49,8 +49,8 @@ Route::prefix('admin/guru')->name('admin.guru.')->group(function () {
     Route::get('/', [GuruController::class, 'index'])->name('index'); // Menampilkan daftar guru
     Route::get('/create', [GuruController::class, 'create'])->name('create'); // Menampilkan form untuk menambah guru
     Route::post('/', [GuruController::class, 'store'])->name('store'); // Menyimpan data guru baru
-    Route::get('/{user}', [GuruController::class, 'show'])->name('show'); // Menampilkan detail guru
-    Route::get('/{user}/edit', [GuruController::class, 'edit'])->name('edit'); // Menampilkan form untuk mengedit guru
+    Route::get('/{user}', [GuruController::class, 'show'])->name('show');
+    Route::get('/{user}/edit', [GuruController::class, 'edit'])->name('edit');
     Route::put('/{user}', [GuruController::class, 'update'])->name('update'); // Mengupdate data guru
     Route::delete('/{user}', [GuruController::class, 'destroy'])->name('destroy'); // Menghapus guru
 });

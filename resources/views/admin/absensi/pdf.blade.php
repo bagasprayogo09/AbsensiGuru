@@ -1,29 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Data Absensi</title>
+    <title>Laporan Absensi</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
         table {
             width: 100%;
             border-collapse: collapse;
         }
         th, td {
-            border: 1px solid #000;
+            border: 1px solid black;
             padding: 8px;
             text-align: left;
         }
         th {
-            background-color: #4a5568;
-            color: #fff;
+            background-color: #f2f2f2;
         }
     </style>
 </head>
 <body>
-    <h1>Data Absensi</h1>
-    <p>Rentang Tanggal: {{ $start_date }} s/d {{ $end_date }}</p>
+    <h1>Laporan Absensi</h1>
+    <p>Periode: {{ $start_date }} s/d {{ $end_date }}</p>
     <table>
         <thead>
             <tr>
@@ -33,6 +29,7 @@
                 <th>Jam Masuk</th>
                 <th>Jam Keluar</th>
                 <th>Status</th>
+                <th>Foto</th>
             </tr>
         </thead>
         <tbody>
@@ -41,9 +38,16 @@
                     <td>{{ $index + 1 }}</td>
                     <td>{{ $item->user->name }}</td>
                     <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d-m-Y') }}</td>
-                    <td>{{ $item->jam_masuk ? \Carbon\Carbon::parse($item->jam_masuk)->format('H:i') : '-' }}</td>
-                    <td>{{ $item->jam_keluar ? \Carbon\Carbon::parse($item->jam_keluar)->format('H:i') : '-' }}</td>
+                    <td>{{ $item->jam_masuk }}</td>
+                    <td>{{ $item->jam_keluar }}</td>
                     <td>{{ ucfirst($item->status) }}</td>
+                    <td>
+                        @if($item->foto_jam_keluar)
+                        <img src="{{ public_path('storage/' . $item->foto_jam_keluar) }}" alt="Foto">
+                        @else
+                            Tidak ada foto
+                        @endif
+                    </td>
                 </tr>
             @endforeach
         </tbody>

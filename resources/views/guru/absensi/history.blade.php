@@ -1,13 +1,13 @@
 <x-guruapp-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Histori Absensi') }}
+            {{ __('Riwayat Kehadiran') }}
         </h2>
     </x-slot>
 
     <div class="container mx-auto px-4 py-6 bg-blue-50 rounded-lg shadow-lg">
         <h1 class="text-2xl font-bold mb-4 text-center text-black-600">
-            Histori Absensi Anda, {{ $user->name }}
+            Riwayat Kehadiran Anda, {{ $user->name }}
         </h1>
 
         <!-- Tabel Data Absensi -->
@@ -18,6 +18,7 @@
                         <th class="px-4 py-2 text-left text-gray-800">Tanggal</th>
                         <th class="px-4 py-2 text-left text-gray-800">Jam Masuk</th>
                         <th class="px-4 py-2 text-left text-gray-800">Jam Keluar</th>
+                        <th class="px-4 py-2 text-left text-gray-800">Photo</th>
                         <th class="px-4 py-2 text-left text-gray-800">Status</th>
                     </tr>
                 </thead>
@@ -32,6 +33,9 @@
                             </td>
                             <td class="align-middle px-4 py-2">
                                 {{ $absensi->jam_keluar ? \Carbon\Carbon::parse($absensi->jam_keluar)->format('H:i') : '-' }}
+                            </td>
+                            <td class="align-middle px-4 py-2">
+                                <img src="{{ Storage::url($absensi->foto_jam_keluar) }}" alt="Foto Jam Keluar" class="mt-2 w-32 h-32 object-cover rounded">
                             </td>
                             <td class="align-middle px-4 py-2">
                                 {{ ucfirst($absensi->status) }}

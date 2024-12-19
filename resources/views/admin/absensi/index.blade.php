@@ -37,6 +37,8 @@
                             <th class="px-4 py-2 text-left text-gray-800">Jam Masuk</th>
                             <!-- Kolom jam keluar -->
                             <th class="px-4 py-2 text-left text-gray-800">Jam Keluar</th>
+                            <!-- Kolom foto jam keluar -->
+                            <th class="px-4 py-2 text-left text-gray-800">Foto Jam Keluar</th>
                             <!-- Kolom status -->
                             <th class="px-4 py-2 text-left text-gray-800">Status</th>
                             <!-- Kolom aksi -->
@@ -59,6 +61,14 @@
                                 <td class="align-middle px-4 py-2">{{ $item->jam_masuk ? \Carbon\Carbon::parse($item->jam_masuk)->format('H:i') : '-' }}</td>
                                 <!-- Kolom jam keluar -->
                                 <td class="align-middle px-4 py-2">{{ $item->jam_keluar ? \Carbon\Carbon::parse($item->jam_keluar)->format('H:i') : '-' }}</td>
+                                <!-- Kolom foto jam keluar -->
+                                <td class="align-middle px-4 py-2">
+                                    @if($item->foto_jam_keluar)
+                                        <img src="{{ Storage::url($item->foto_jam_keluar) }}" alt="Foto Jam Keluar" class="w-16 h-16 object-cover rounded">
+                                    @else
+                                        -
+                                    @endif
+                                </td>
                                 <td class="align-middle px-4 py-2 text-center">
                                     <span
                                         class="badge
@@ -76,7 +86,7 @@
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
                                     <!-- Link untuk hapus absensi -->
-                                    {{-- <a href="{{ route('admin.absensi.delete', $item->id) }}" class="btn btn -danger btn-sm" style="font-weight: bold; color: black; background-color: white; border-color: #4a5568;" onmouseover="this.style.background='red'; this.style.borderColor='red';" onmouseout="this.style.background='white'; this.style.borderColor='black'" title="Hapus Absensi">
+                                    {{-- <a href="{{ route('admin.absensi.delete', $item->id) }}" class="btn btn-danger btn-sm" style="font-weight: bold; color: black; background-color: white; border-color: #4a5568;" onmouseover="this.style.background='red'; this.style.borderColor='red';" onmouseout="this.style.background='white'; this.style.borderColor='black'" title="Hapus Absensi">
                                         <i class="fas fa-trash-alt"></i> Hapus
                                     </a> --}}
                                 </td>
@@ -84,7 +94,7 @@
                         @empty
                             <!-- Tampilkan pesan jika tidak ada data -->
                             <tr>
-                                <td colspan="7" class="text-center text-muted" style="padding: 20px; font-size: 1.1rem;">
+                                <td colspan="8" class="text-center text-muted" style="padding: 20px; font-size: 1.1rem;">
                                     Tidak ada data absensi.
                                 </td>
                             </tr>

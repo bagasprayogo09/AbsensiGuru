@@ -19,23 +19,20 @@ class GuruDashboardController extends Controller
         return view('guru.dashboard', compact('absensi', 'jadwals','todayDate'));
     }
 
-
     public function absen(Request $request)
     {
-        $today = Carbon::now('Asia/Jakarta')->locale('id')->isoFormat('dddd');
-        $jadwals = Jadwal::where('guru_id', Auth::id())->with('mataPelajaran')->get();
+        // Validasi input foto jika ada
+        $request->validate([
+            'foto_jam_keluar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi foto
+        ]);
 
-
-        if (!$jadwals) {
-            return redirect()->back()->with('error', 'Anda tidak memiliki jadwal mengajar hari ini!');
-        }
-
-        // Proses absensi
         $todayDate = Carbon::now('Asia/Jakarta')->toDateString();
         $currentTime = Carbon::now('Asia/Jakarta')->toTimeString();
 
+        // Ambil absensi hari ini
         $absensi = Absensi::where('guru_id', Auth::id())->where('tanggal', $todayDate)->first();
 
+        // Jika belum ada absensi untuk hari ini
         if (!$absensi) {
             Absensi::create([
                 'guru_id' => Auth::id(),
@@ -45,7 +42,21 @@ class GuruDashboardController extends Controller
             ]);
             return redirect()->back()->with('message', 'Absensi masuk berhasil dicatat!');
         } elseif (!$absensi->jam_keluar) {
-            $absensi->update(['jam_keluar' => $currentTime]);
+            // Jika sudah absen masuk tetapi belum absen keluar
+            $fotoPath = null;
+
+            // Meng-upload foto jika ada
+            if ($request->hasFile('foto_jam_keluar')) {
+                $file = $request->file('foto_jam_keluar');
+                $fotoPath = $file->store('foto_jam_keluar', 'public'); // Menyimpan foto di storage/app/public/foto_jam_keluar
+            }
+
+            // Update jam keluar dan foto
+            $absensi->update([
+                'jam_keluar' => $currentTime,
+                'foto_jam_keluar' => $fotoPath, // Menyimpan path foto di database
+            ]);
+
             return redirect()->back()->with('message', 'Absensi keluar berhasil dicatat!');
         }
 

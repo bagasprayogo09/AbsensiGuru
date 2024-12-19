@@ -42,8 +42,9 @@ class User extends Authenticatable
 
     public function jadwal()
     {
-        return $this->hasMany(Jadwal::class, 'guru_id', 'id');
+        return $this->hasMany(Jadwal::class, 'guru_id');
     }
+
 
     public function getJumlahMengajarAttribute()
     {

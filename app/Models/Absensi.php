@@ -9,13 +9,13 @@ class Absensi extends Model
 {
     use HasFactory;
 
-    // Tambahkan semua kolom yang bisa diisi secara massal
     protected $fillable = [
         'guru_id',
         'tanggal',
         'status',
         'jam_masuk',
-        'jam_keluar'
+        'jam_keluar',
+        'foto_jam_keluar'
     ];
 
     /**
@@ -23,7 +23,6 @@ class Absensi extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class,'guru_id');
+        return $this->belongsTo(User::class, 'guru_id');
     }
 }
-

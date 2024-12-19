@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('absensis', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('guru_id')->constrained('users')->onDelete('cascade'); // Menambahkan kolom user_id sebagai foreign key
+            $table->foreignId('guru_id')->constrained('users')->onDelete('cascade');
             $table->date('tanggal');
             $table->enum('status', ['hadir', 'tidak_hadir', 'izin']);
-            $table->time('jam_masuk')->nullable(); // Menambahkan kolom jam_masuk
-            $table->time('jam_keluar')->nullable(); // Menambahkan kolom jam_keluar
+            $table->time('jam_masuk')->nullable();
+            $table->time('jam_keluar')->nullable();
+            $table->string('foto_jam_keluar')->nullable(); // Menambahkan kolom foto_jam_keluar
             $table->timestamps();
         });
     }
-
     /**
      * Reverse the migrations.
      */

@@ -52,22 +52,31 @@
                         <th class="px-4 py-2 text-left text-gray-800">Jam Masuk</th>
                         <th class="px-4 py-2 text-left text-gray-800">Jam Keluar</th>
                         <th class="px-4 py-2 text-left text-gray-800">Status</th>
+                        <th class="px-4 py-2 text-left text-gray-800">foto</th>
+
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($absensis as $index => $item)
                         <tr class="{{ $index % 2 == 0 ? 'bg-blue-100' : 'bg-blue-200' }} hover:bg-blue-300 transition duration-200">
-                            <td class="py-2 px-4 border-b text-center">{{ $item->user_id }}</td>
+                            <td class="py-2 px-4 border-b text-center">{{ $index + 1 }}</td>
                             <td class="py-2 px-4 border-b">{{ $item->user->name }}</td>
                             <td class="py-2 px-4 border-b">{{ \Carbon\Carbon::parse($item->tanggal)->format('d-m-Y') }}</td>
                             <td class="py-2 px-4 border-b">{{ $item->jam_masuk }}</td>
                             <td class="py-2 px-4 border-b">{{ $item->jam_keluar }}</td>
                             <td class="py-2 px-4 border-b">{{ ucfirst($item->status) }}</td>
+                            <td class="py-2 px-4 border-b">
+                                @if($item->foto_jam_keluar)
+                                <img src="{{ Storage::url($item->foto_jam_keluar) }}" alt="Foto Jam Keluar" class="w-16 h-16 object-cover rounded">
+                                @else
+                                    Tidak ada foto
+                                @endif
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="py-2 px-4 text-center text-muted" style="padding: 20px; font-size: 1.1rem;">
-                                Tidak ada data absensi untuk ditampilkan.
+                            <td colspan="7" class="py-2 px-4 text-center text-muted" style="padding: 20px; font-size: 1.1rem;">
+                                Tidak ada data absensi yang ditemukan.
                             </td>
                         </tr>
                     @endforelse

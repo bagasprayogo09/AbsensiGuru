@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Absensi;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon; // Import Carbon
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class AbsensiController extends Controller
 {
@@ -63,9 +64,10 @@ class AbsensiController extends Controller
             'status' => 'required|in:hadir,tidak_hadir,izin',
             'jam_masuk' => 'nullable|date_format:H:i', // Validasi jam masuk
             'jam_keluar' => 'nullable|date_format:H:i', // Validasi jam keluar (nullable)
+            'foto_jam_keluar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi foto jam keluar
         ]);
 
-        $absensis = Absensi::findOrFail($id);
+        $absensis = Absensi::findOrFail($id); // Temukan absensi berdasarkan id
 
         // Hanya memperbarui tanggal, status, jam masuk, dan jam keluar
         $absensis->tanggal = Carbon::parse($request->tanggal)->timezone('Asia/Jakarta')->format('Y-m-d');
@@ -73,39 +75,58 @@ class AbsensiController extends Controller
         $absensis->jam_masuk = $request->jam_masuk ? Carbon::parse($request->jam_masuk)->timezone('Asia/Jakarta')->format('H:i:s') : null;
         $absensis->jam_keluar = $request->jam_keluar ? Carbon::parse($request->jam_keluar)->timezone('Asia/Jakarta')->format('H:i:s') : null; // Update jam keluar
 
+        // Simpan foto jam keluar jika ada
+        if ($request->hasFile('foto_jam_keluar')) {
+            // Hapus foto yang lama jika ada
+            if ($absensis->foto_jam_keluar) {
+                Storage::disk('public')->delete($absensis->foto_jam_keluar);
+            }
+            $path = $request->file('foto_jam_keluar')->store('uploads/foto_jam_keluar', 'public');
+            $absensis->foto_jam_keluar = $path; // Simpan path foto jam keluar
+        }
+
+        // Hapus foto jam keluar jika checkbox dicentang
+        if ($request->has('delete_foto')) {
+            if ($absensis->foto_jam_keluar) {
+                Storage::disk('public')->delete($absensis->foto_jam_keluar);
+                $absensis->foto_jam_keluar = null; // Set foto jam keluar menjadi null
+            }
+        }
+
         // Simpan perubahan ke database
         $absensis->save();
 
         return redirect()->route('admin.absensi.index')->with('success', 'Absensi berhasil diperbarui.');
     }
-
     public function laporanAbsensi(Request $request)
 {
     $query = Absensi::query();
 
-if ($request->filled('start_date')) {
-    $query->where('tanggal', '>=', $request->start_date);
-}
+    // Filter berdasarkan rentang tanggal
+    if ($request->filled('start_date')) {
+        $query->where('tanggal', '>=', $request->start_date);
+    }
 
-if ($request->filled('end_date')) {
-    $query->where('tanggal', '<=', $request->end_date);
-}
+    if ($request->filled('end_date')) {
+        $query->where('tanggal', '<=', $request->end_date);
+    }
 
-if ($request->filled('status')) {
-    $query->where('status', $request->status);
-}
+    // Filter berdasarkan status
+    if ($request->filled('status') && $request->status !== '') {
+        $query->where('status', $request->status);
+    }
 
-if ($request->filled('nama')) {
-    $query->whereHas('user', function($q) use ($request) {
-        $q->where('name', 'like', '%' . $request->nama . '%');
-    });
-}
+    // Filter berdasarkan nama guru
+    if ($request->filled('nama')) {
+        $query->whereHas('user', function($q) use ($request) {
+            $q->where('name', 'like', '%' . $request->nama . '%');
+        });
+    }
 
-if ($request->filled('user_id')) {
-    $query->where('user_id', $request->user_id);
-}
-
-$absensis = $query->get();
+    // Filter berdasarkan user_id jika ada
+    if ($request->filled('user_id')) {
+        $query->where('user_id', $request->user_id);
+    }
 
     // Ambil data absensi sesuai filter
     $absensis = $query->get();
@@ -140,7 +161,8 @@ public function exportPDF(Request $request)
     $end_date = $request->end_date;
 
     // Buat PDF
-    $pdf = PDF::loadView('admin.absensi.pdf', compact('absensis', 'start_date', 'end_date'));
+    $pdf = PDF::loadView('admin.absensi.pdf', compact('absensis', 'start_date', 'end_date'))
+    ->setOptions(['isRemoteEnabled' => true]);
     return $pdf->download('data_absensi.pdf');
 }
 }

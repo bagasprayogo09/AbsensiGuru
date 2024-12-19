@@ -21,10 +21,10 @@
                     <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" required>
                 </div>
 
-                <div class="mb-4">
+                {{-- <div class="mb-4">
                     <label for="jumlah_mengajar" class="block text-gray-700">Jumlah Mengajar</label>
                     <input type="number" id="jumlah_mengajar" name="jumlah_jam" value="{{ old('jumlah_jam', $user->jamMengajar->sum('jumlah_jam')) }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" required min="0">
-                </div>
+                </div> --}}
 
                 <div class="mb-4">
                     <label for="hari" class="block text-gray-700">Jadwal Mengajar</label>

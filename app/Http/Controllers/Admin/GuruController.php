@@ -56,11 +56,12 @@ class GuruController extends Controller
     }
 
     public function edit(User $user)
-    {
-        $mataPelajaran = MataPelajaran::all();
-        $user->load('jadwals'); // Muat relasi jadwals untuk diedit
-        return view('admin.guru.edit', compact('user', 'mataPelajaran'));
-    }
+{
+    ($user); // Periksa apakah data user diambil dengan benar
+    $mataPelajaran = MataPelajaran::all();
+    $user->load('jadwals');
+    return view('admin.guru.edit', compact('user', 'mataPelajaran'));
+}
 
     // Mengupdate data guru
     public function update(Request $request, User $user)
@@ -98,6 +99,12 @@ class GuruController extends Controller
 
         return redirect()->route('admin.guru.index')->with('success', 'Guru dan jadwal berhasil diupdate.');
     }
+
+    public function show(User $user)
+{
+    ($user); // Periksa apakah data user diambil dengan benar
+    return view('admin.guru.show', compact('user'));
+}
 
     public function destroy(User $user)
     {

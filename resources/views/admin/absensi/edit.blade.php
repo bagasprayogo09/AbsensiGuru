@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="container mt-4 p-6 bg-base-200 rounded-lg shadow-md">
-        <form action="{{ route('admin.absensi.update', $absensis->id) }}" method="POST">
+        <form action="{{ route('admin.absensi.update', $absensis->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -32,12 +32,22 @@
             </div>
 
             <div class="form-control mb-4">
-                <label for="jam_keluar" class="label">
-                    <span class="label-text">Jam Keluar</span>
+                <label for="foto_jam_keluar" class="label">
+                    <span class="label-text">Foto Jam Keluar</span>
                 </label>
-                <input type="time" class="input input-bordered" id="jam_keluar" name="jam_keluar" value="{{ old('jam_keluar', $absensis->jam_keluar ? \Carbon\Carbon::parse($absensis->jam_keluar)->format('H:i') : '') }}">
+                <input type="file" class="input input-bordered" id="foto_jam_keluar" name="foto_jam_keluar" accept="image/*">
+                @if($absensis->foto_jam_keluar)
+                    <div class="mt-2">
+                        <img src="{{ Storage::url($absensis->foto_jam_keluar) }}" alt="Foto Jam Keluar" class="w-32 h-32 object-cover rounded">
+                    </div>
+                    <div class="mt-2">
+                        <label class="label">
+                            <input type="checkbox" name="delete_foto" value="1" class="checkbox">
+                            <span class="label-text">Hapus Foto Jam Keluar</span>
+                        </label>
+                    </div>
+                @endif
             </div>
-
             <div class="form-control mb-4">
                 <label for="status" class="label">
                     <span class="label-text">Status</span>
