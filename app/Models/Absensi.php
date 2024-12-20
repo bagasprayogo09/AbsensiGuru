@@ -23,6 +23,6 @@ class Absensi extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'guru_id');
+        return $this->belongsTo(User::class, 'guru_id'); // guru_id di Absensi merujuk ke id di User
     }
 }

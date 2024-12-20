@@ -16,7 +16,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-5 w-5 mr-2 stroke-current">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-4.41 0-8 2.69-8 6v1h16v-1c0-3.31-3.59-6-8-6z"></path>
                     </svg>
-                    Riwayat Kehadiran
+                    Histori Absensi
                 </a>
             </li>
         </li>

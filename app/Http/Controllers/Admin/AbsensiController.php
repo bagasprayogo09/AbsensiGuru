@@ -100,6 +100,13 @@ class AbsensiController extends Controller
     }
     public function laporanAbsensi(Request $request)
 {
+    $request->validate([
+        'start_date' => 'nullable|date',
+        'end_date' => 'nullable|date|after_or_equal:start_date',
+        'status' => 'nullable|string',
+        'nama' => 'nullable|string',
+        'guru_id' => 'nullable|exists:users,id', // Pastikan guru_id ada di tabel users
+    ]);
     $query = Absensi::query();
 
     // Filter berdasarkan rentang tanggal
@@ -124,18 +131,27 @@ class AbsensiController extends Controller
     }
 
     // Filter berdasarkan user_id jika ada
-    if ($request->filled('user_id')) {
-        $query->where('user_id', $request->user_id);
+    if ($request->filled('guru_id')) {
+        $query->where('guru_id', $request->guru_id);
     }
 
     // Ambil data absensi sesuai filter
-    $absensis = $query->get();
+    $absensis = $query->with('user')->get(); // Pastikan untuk memuat relasi user
 
     return view('admin.absensi.laporan', compact('absensis'));
 }
 
 public function exportPDF(Request $request)
 {
+    // Validasi input
+    $request->validate([
+        'start_date' => 'nullable|date',
+        'end_date' => 'nullable|date|after_or_equal:start_date',
+        'status' => 'nullable|string',
+        'guru_id' => 'nullable|exists:users,id',
+        'nama' => 'nullable|string', // Validasi untuk nama guru
+    ]);
+
     $query = Absensi::query();
 
     // Filter berdasarkan rentang tanggal
@@ -148,13 +164,25 @@ public function exportPDF(Request $request)
         $query->where('status', $request->status);
     }
 
-    // Filter berdasarkan user_id jika ada
-    if ($request->filled('user_id')) {
-        $query->where('user_id', $request->user_id);
+    // Filter berdasarkan guru_id jika ada
+    if ($request->filled('guru_id')) {
+        $query->where('guru_id', $request->guru_id);
+    }
+
+    // Filter berdasarkan nama guru
+    if ($request->filled('nama')) {
+        $query->whereHas('user', function($q) use ($request) {
+            $q->where('name', 'like', '%' . $request->nama . '%');
+        });
     }
 
     // Ambil data absensi yang sudah difilter
     $absensis = $query->get();
+
+    // Cek jika tidak ada data
+    if ($absensis->isEmpty()) {
+        return response()->json(['message' => 'Tidak ada data absensi yang ditemukan.'], 404);
+    }
 
     // Siapkan data untuk tampilan PDF
     $start_date = $request->start_date;
@@ -162,7 +190,8 @@ public function exportPDF(Request $request)
 
     // Buat PDF
     $pdf = PDF::loadView('admin.absensi.pdf', compact('absensis', 'start_date', 'end_date'))
-    ->setOptions(['isRemoteEnabled' => true]);
-    return $pdf->download('data_absensi.pdf');
+        ->setOptions(['isRemoteEnabled' => true]);
+
+    return $pdf->stream('data_absensi.pdf');
 }
 }
