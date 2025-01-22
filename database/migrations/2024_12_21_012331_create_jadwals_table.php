@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('guru_id')->constrained('gurus')->onDelete('cascade');
             $table->foreignId('mata_pelajaran_id')->constrained('mata_pelajarans')->onDelete('cascade');
+            $table->string('kelas'); // Misalnya: X, XI, XII
             $table->string('hari'); // Misalnya: Senin, Selasa, dll.
             $table->time('jam_mulai');
             $table->time('jam_selesai');

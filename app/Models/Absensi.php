@@ -34,4 +34,8 @@ class Absensi extends Model
     {
         return $this->belongsTo(jadwal::class);
     }
+    protected $attributes = [
+        'foto_keluar' => null, // Set default nilai NULL
+    ];
+    
 }

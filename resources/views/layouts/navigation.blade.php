@@ -23,7 +23,7 @@
             </div>
             <ul tabindex="0" class="dropdown-content menu bg-white rounded-box z-[1] w-48 p-2 shadow-lg">
                 <li><a href="{{ route('admin.guru.create') }}" class="p-2 hover:bg-blue-100 transition duration-200">Tambah Guru</a></li>
-                <li><a href="{{ route('admin.guru.index') }}" class="p-2 hover:bg-blue-100 transition duration-200">Daftar Semua Guru</a></li>
+                <li><a href="{{ route('admin.guru.index') }}" class="p-2 hover:bg-blue-100 transition duration-200">Data Guru</a></li>
                 <li><a href="{{ route('admin.mata_pelajaran.index') }}" class="p-2 hover:bg-blue-100 transition duration-200">Mata Pelajaran Guru</a></li>
                 <li><a href="{{ route('admin.jadwal.index') }}" class="p-2 hover:bg-blue-100 transition duration-200">Jadwal Guru</a></li>
             </ul>

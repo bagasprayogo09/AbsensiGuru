@@ -12,6 +12,14 @@
         </div>
     @endif
 
+       <!-- Pesan error -->
+       @if (session('error'))
+       <div class="alert alert-danger mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded relative">
+           <span>{{ session('error') }}</span>
+       </div>
+   @endif
+
+
     <!-- Grid untuk Data Absensi dan Jadwal Mengajar -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
         <!-- Jadwal Mengajar -->
@@ -23,7 +31,9 @@
                         <div class="card-body">
                             <h3 class="card-title text-black">Hari: {{ ucfirst($jadwal->hari) }}</h3>
                             <p class="text-sm font-bold text-black">Mata Pelajaran: {{ $jadwal->mataPelajaran->nama }}</p>
-                            <p class="text-sm text-gray-500">Jam: {{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }}</p>
+                            <p class="text-sm font-bold text-black">Jam: {{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }}</p>
+                            <p class="text-sm font-bold text-black">Kelas: {{ $jadwal->kelas }}</p>
+
                             <!-- Tombol Absen -->
                             @if ($jadwal->hari == \Carbon\Carbon::now('Asia/Jakarta')->isoFormat('dddd'))
                                 <form action="{{ route('guru.absen') }}" method="POST" enctype="multipart/form-data">
@@ -44,7 +54,8 @@
                                             Absen Masuk
                                         </button>
                                     @elseif (!$absenHariIni->jam_keluar)
-                                        <input type="file" name="foto_jam_keluar" accept="image/*" class="mb-4">
+                                        <input type="file" name="foto_jam_keluar"  class="mb-4">
+                                        <h1>ukuran file maksimal 2 MB</h1>
                                         <button
                                             type="submit"
                                             class="btn btn-warning bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transform hover:scale-105 transition duration-300 ease-in-out">

@@ -2,7 +2,7 @@
     <div class="container mx-auto px-4 py-8">
         <div class="card bg-base-100 shadow-xl">
             <div class="card-body">
-                <h2 class="card-title text-2xl mb-4">Histori Absensi</h2>
+                <h2 class="card-title text-2xl mb-4">Riwayat Kehadiran</h2>
 
                 {{-- Informasi Guru --}}
                 <div class="flex items-center mb-6">

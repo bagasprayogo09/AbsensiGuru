@@ -120,6 +120,28 @@
                     @enderror
                 </div>
 
+                <div>
+                    <label
+                        for="jurusan"
+                        class="block text-sm font-medium text-black"
+                    >
+                        Alamat
+                    </label>
+                    <input
+                        type="text"
+                        name="alamat"
+                        id="alamat"
+                        value="{{ old('alamat', $guru->alamat) }}"
+                        class="mt-1 block w-full rounded-md border-gray-300
+                               shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50
+                               text-black bg-white"
+                        required
+                    >
+                    @error('jurusan')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 {{-- Password (Opsional) --}}
                 <div>
                     <label

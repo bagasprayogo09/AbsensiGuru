@@ -30,12 +30,13 @@
         <div class="card bg-base-100 shadow-xl">
             <div class="card-body p-0">
                 <div class="overflow-x-auto">
-                    <table class="min-w-full bg-white border rounded-lg shadow-md w-full"> <!-- Menambahkan kelas w-full -->
+                    <table class="min-w-full bg-white border rounded-lg shadow-md w-full">
                         <thead class="bg-blue-600 border-b">
                             <tr>
                                 <th class="px-4 py-2 text-left text-black">Nama</th>
                                 <th class="px-4 py-2 text-left text-black">Email</th>
                                 <th class="px-4 py-2 text-left text-black">Pendidikan Terakhir</th>
+                                <th class="px-4 py-2 text-left text-black">Alamat</th>
                                 <th class="px-4 py-2 text-left text-black">Jurusan</th>
                                 <th class="px-4 py-2 text-center text-black">Aksi</th>
                             </tr>
@@ -45,6 +46,7 @@
                                 <td class="align-middle px-4 py-2 text-black">{{ $guru->name }}</td>
                                 <td class="align-middle px-4 py-2 text-black">{{ $guru->email }}</td>
                                 <td class="align-middle px-4 py-2 text-black">{{ $guru->pendidikan_terakhir }}</td>
+                                <td class="align-middle px-4 py-2 text-black">{{ $guru->alamat }}</td>
                                 <td class="align-middle px-4 py-2 text-black">{{ $guru->jurusan }}</td>
                                 <td class="text-center align-middle px-4 py-2">
                                     <a href="{{ route('admin.guru.edit', $guru) }}" class="btn btn-warning btn-sm mx- 1" style="font-weight: bold; color: black; background-color: white; border-color: #4a5568;" onmouseover="this.style.background='yellow'; this.style.borderColor='yellow';" onmouseout="this.style.background='white'; this.style.borderColor='black'">

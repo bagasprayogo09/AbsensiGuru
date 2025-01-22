@@ -27,6 +27,7 @@ class GuruController extends Controller
             'email' => 'required|email|unique:gurus,email',
             'password' => 'required|string|min:8|confirmed',
             'pendidikan_terakhir' => 'required|string|max:225',
+            'alamat' => 'required|string|max:225',
             'jurusan' => 'required|string|max:225' // Added validation for jurusan
         ]);
 
@@ -51,6 +52,7 @@ class GuruController extends Controller
             'email' => 'required|email|unique:gurus,email,'.$guru->id,
             'password' => 'nullable|string|min:8|confirmed',
             'pendidikan_terakhir' => 'required|string|max:225',
+            'alamat' => 'required|string|max:225',
             'jurusan' => 'required|string|max:225' // Added validation for jurusan
         ]);
 

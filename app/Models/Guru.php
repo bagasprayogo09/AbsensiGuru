@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Guru extends Authenticatable
 {
     use Notifiable;
-    protected $fillable = ['name', 'email', 'password','pendidikan_terakhir','jurusan'];
+    protected $fillable = ['name', 'email', 'password','pendidikan_terakhir','alamat','jurusan'];
     protected $hidden   = ['password', 'remember_token'];
 
     public function absensis()

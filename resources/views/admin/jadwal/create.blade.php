@@ -30,7 +30,10 @@
                                 @endforeach
                             </select>
                         </div>
-
+                        <div class="mb-4">
+                            <label for="kelas" class="block text-gray-700">Kelas</label>
+                            <input type="text" name="kelas" id="kelas" class="form-input mt-1 block w-full" required>
+                        </div>
                         <div class="mb-4">
                             <label for="hari" class="block text-gray-700">Hari</label>
                             <input type="text" name="hari" id="hari" class="form-input mt-1 block w-full" required>

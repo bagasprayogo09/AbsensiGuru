@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('pendidikan_terakhir');
             $table->string('jurusan');
+            $table->string('alamat');
             $table->string('password');
 
             $table->timestamps();

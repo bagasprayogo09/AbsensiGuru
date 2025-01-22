@@ -30,6 +30,7 @@ class JadwalController extends Controller
         $request->validate([
             'guru_id' => 'required|exists:gurus,id',
             'mata_pelajaran_id' => 'required|exists:mata_pelajarans,id',
+            'kelas' => 'required|string|max:255',
             'hari' => 'required|string|max:255',
             'jam_mulai' => 'required|date_format:H:i',
             'jam_selesai' => 'required|date_format:H:i',
@@ -58,6 +59,7 @@ class JadwalController extends Controller
         $request->validate([
             'guru_id' => 'required|exists:gurus,id',
             'mata_pelajaran_id' => 'required|exists:mata_pelajarans,id',
+            'kelas' => 'required|string|max:255',
             'hari' => 'required|string|max:255',
             'jam_mulai' => 'required|date_format:H:i',
             'jam_selesai' => 'required|date_format:H:i',
