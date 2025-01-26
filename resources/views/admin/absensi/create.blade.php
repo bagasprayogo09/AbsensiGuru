@@ -13,7 +13,6 @@
                         <option value="{{ $guru->id }}">{{ $guru->name }}</option>
                     @endforeach
                 </select>
-                <small class="text-muted">Pilih nama guru yang akan diabsen.</small>
             </div>
 
             <div class="form-group mb-4">
@@ -21,51 +20,44 @@
                 <select id="jadwal_id" name="jadwal_id" class="form-control" required>
                     <option value="">-- Pilih Jadwal --</option>
                     @foreach($jadwals as $jadwal)
-                        <option value="{{ $jadwal->id }}">{{ $jadwal->hari}}</option>
+                        <option value="{{ $jadwal->id }}">{{ $jadwal->hari }} - {{ $jadwal->kelas }}</option>
                     @endforeach
                 </select>
-                <small class="text-muted">Pilih jadwal yang sesuai.</small>
             </div>
 
             <div class="form-group mb-4">
                 <x-input-label for="tanggal" :value="__('Tanggal')" class="form-label" />
                 <input id="tanggal" type="date" name="tanggal" class="form-control" required />
-                <small class="text-muted">Pilih tanggal absensi.</small>
             </div>
 
             <div class="form-group mb-4">
                 <x-input-label for="jam_masuk" :value="__('Jam Masuk')" class="form-label" />
                 <input id="jam_masuk" type="time" name="jam_masuk" class="form-control" />
-                <small class="text-muted">Masukkan jam masuk (format HH:MM).</small>
             </div>
 
             <div class="form-group mb-4">
                 <x-input-label for="jam_keluar" :value="__('Jam Keluar')" class="form-label" />
                 <input id="jam_keluar" type="time" name="jam_keluar" class="form-control" />
-                <small class="text-muted">Masukkan jam keluar (format HH:MM).</small>
             </div>
 
             <div class="form-group mb-4">
                 <x-input-label for="status" :value="__('Status')" class="form-label" />
                 <select id="status" name="status" class="form-control" required>
-                    <option value="">-- Pilih Status --</option>
                     <option value="hadir">Hadir</option>
-                    <option value="tidak_hadir">Tidak Hadir</option>
+                    <option value="tidak hadir">Tidak Hadir</option>
                     <option value="izin">Izin</option>
                     <option value="terlambat">Terlambat</option>
                 </select>
-                <small class="text-muted">Pilih status absensi guru.</small>
             </div>
 
             <div class="form-group mb-4">
                 <x-input-label for="keterangan" :value="__('Keterangan')" class="form-label" />
                 <textarea id="keterangan" name="keterangan" class="form-control" rows="3"></textarea>
-                <small class="text-muted">Masukkan keterangan tambahan jika ada.</small>
             </div>
 
             <div class="form-group mb-4">
                 <x-input-label for="foto_keluar" :value="__('Foto Keluar')" class="form-label" />
-                <input id="foto_keluar" type="file" name="foto_keluar" class="form-control" <small class="text-muted">Upload foto jika ada.</small>
+                <input id="foto_keluar" type="file" name="foto_keluar" class="form-control" />
             </div>
 
             <div class="form-group text-center mt-4">

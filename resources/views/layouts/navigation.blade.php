@@ -121,10 +121,20 @@
                     Profile
                 </a>
             </li>
+            <li class="mb-4">
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="flex items-center p-3 rounded-lg hover:bg-red-600 hover:text-white transition duration-200 w-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-5 w-5 mr-2 stroke-current">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12H4m8-8l-4 4m4-4l4 4m-4 4l4-4m-4 4l-4-4"></path>
+                        </svg>
+                        Logout
+                    </button>
+                </form>
+            </li>
         </ul>
     </div>
 </div>
-
 <script>
     function toggleSidebar() {
         var sidebar = document.getElementById('mobile-sidebar');

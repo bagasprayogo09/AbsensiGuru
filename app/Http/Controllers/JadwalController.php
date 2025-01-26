@@ -26,24 +26,33 @@ class JadwalController extends Controller
 
     // Menyimpan jadwal baru
     public function store(Request $request)
-    {
-        $request->validate([
-            'guru_id' => 'required|exists:gurus,id',
-            'mata_pelajaran_id' => 'required|exists:mata_pelajarans,id',
-            'kelas' => 'required|string|max:255',
-            'hari' => 'required|string|max:255',
-            'jam_mulai' => 'required|date_format:H:i',
-            'jam_selesai' => 'required|date_format:H:i',
-        ]);
+{
+    $request->validate([
+        'guru_id' => 'required|exists:gurus,id',
+        'mata_pelajaran_id' => 'required|exists:mata_pelajarans,id',
+        'kelas' => 'required|string|max:255',
+        'hari' => 'required|string|max:255',
+        'jam_mulai' => 'required|date_format:H:i',
+        'jam_selesai' => 'required|date_format:H:i|after:jam_mulai', // Validasi langsung di sini
+    ]);
 
-        // Cek apakah jam_mulai lebih awal dari jam_selesai
-        if ($request->jam_mulai >= $request->jam_selesai) {
-            return redirect()->back()->withErrors(['jam_selesai' => 'Jam selesai harus lebih besar dari jam mulai.']);
-        }
+    // Cek bentrokan jadwal guru
+    $bentrok = Jadwal::where('guru_id', $request->guru_id)
+        ->where('hari', $request->hari)
+        ->where(fn($q) =>
+            $q->whereBetween('jam_mulai', [$request->jam_mulai, $request->jam_selesai])
+              ->orWhereBetween('jam_selesai', [$request->jam_mulai, $request->jam_selesai])
+              ->orWhere(fn($q) => $q->where('jam_mulai', '<=', $request->jam_mulai)
+                                    ->where('jam_selesai', '>=', $request->jam_selesai))
+        )->exists();
 
-        Jadwal::create($request->all());
-        return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal berhasil ditambahkan.');
+    if ($bentrok) {
+        return back()->withErrors(['guru' => 'Guru ini sudah memiliki jadwal lain pada waktu yang sama.']);
     }
+
+    Jadwal::create($request->all());
+    return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal berhasil ditambahkan.');
+}
 
     // Menampilkan form untuk mengedit jadwal
     public function edit(Jadwal $jadwal)
@@ -55,24 +64,35 @@ class JadwalController extends Controller
 
     // Memperbarui jadwal yang ada
     public function update(Request $request, Jadwal $jadwal)
-    {
-        $request->validate([
-            'guru_id' => 'required|exists:gurus,id',
-            'mata_pelajaran_id' => 'required|exists:mata_pelajarans,id',
-            'kelas' => 'required|string|max:255',
-            'hari' => 'required|string|max:255',
-            'jam_mulai' => 'required|date_format:H:i',
-            'jam_selesai' => 'required|date_format:H:i',
-        ]);
+{
+    $request->validate([
+        'guru_id' => 'required|exists:gurus,id',
+        'mata_pelajaran_id' => 'required|exists:mata_pelajarans,id',
+        'kelas' => 'required|string|max:255',
+        'hari' => 'required|string|max:255',
+        'jam_mulai' => 'required|date_format:H:i',
+        'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
+    ]);
 
-        // Cek apakah jam_mulai lebih awal dari jam_selesai
-        if ($request->jam_mulai >= $request->jam_selesai) {
-            return redirect()->back()->withErrors(['jam_selesai' => 'Jam selesai harus lebih besar dari jam mulai.']);
-        }
+    // Cek bentrokan jadwal guru (kecuali untuk jadwal yang sedang diupdate)
+    $bentrok = Jadwal::where('guru_id', $request->guru_id)
+        ->where('hari', $request->hari)
+        ->where('id', '!=', $jadwal->id)
+        ->where(fn($q) =>
+            $q->whereBetween('jam_mulai', [$request->jam_mulai, $request->jam_selesai])
+              ->orWhereBetween('jam_selesai', [$request->jam_mulai, $request->jam_selesai])
+              ->orWhere(fn($q) => $q->where('jam_mulai', '<=', $request->jam_mulai)
+                                    ->where('jam_selesai', '>=', $request->jam_selesai))
+        )->exists();
 
-        $jadwal->update($request->all());
-        return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal berhasil diperbarui.');
+    if ($bentrok) {
+        return back()->withErrors(['guru' => 'Guru ini sudah memiliki jadwal lain pada waktu yang sama.']);
     }
+
+    $jadwal->update($request->all());
+    return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal berhasil diperbarui.');
+}
+
 
     // Menghapus jadwal
     public function destroy(Jadwal $jadwal)

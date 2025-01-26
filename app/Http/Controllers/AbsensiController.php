@@ -31,14 +31,27 @@ class AbsensiController extends Controller
 
     // Menyimpan data absensi baru
     public function store(StoreAbsensiRequest $request)
-    {
-        $validatedData = $request->validated();
-        $validatedData['foto_keluar'] = $this->handleFileUpload($request);
+{
+    // Validasi data
+    $validatedData = $request->validated();
 
-        Absensi::create($validatedData);
+    // Ambil jadwal berdasarkan jadwal_id
+    $jadwal = Jadwal::find($validatedData['jadwal_id']);
 
-        return redirect()->route('admin.absensi.index')->with('success', 'Data absensi berhasil ditambahkan');
+    // Pastikan jadwal ditemukan dan ambil kelasnya
+    if (!$jadwal) {
+        return redirect()->route('admin.absensi.create')->with('error', 'Jadwal tidak ditemukan.');
     }
+
+    // Simpan absensi baru
+    $validatedData['foto_keluar'] = $this->handleFileUpload($request);  // Mengelola foto keluar jika ada
+    $validatedData['kelas'] = $jadwal->kelas;  // Menambahkan kelas dari jadwal yang dipilih
+
+    Absensi::create($validatedData);
+
+    return redirect()->route('admin.absensi.index')->with('success', 'Data absensi berhasil ditambahkan');
+}
+
 
     // Menampilkan detail absensi
     public function show(Absensi $absensi)

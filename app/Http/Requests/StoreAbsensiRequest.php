@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use App\Models\Jadwal;
 
 class StoreAbsensiRequest extends FormRequest
 {
@@ -21,7 +23,7 @@ class StoreAbsensiRequest extends FormRequest
             'jam_keluar' => 'nullable|date_format:H:i',
             'status' => 'required|in:hadir,tidak hadir,izin,terlambat',
             'foto_keluar' => 'nullable|image|max:2048',
-            'keterangan' => 'nullable|string|max:500'
+            'keterangan' => 'nullable|string|max:500',
         ];
     }
 
@@ -30,8 +32,20 @@ class StoreAbsensiRequest extends FormRequest
         return [
             'guru_id.required' => 'Guru harus dipilih',
             'jadwal_id.required' => 'Jadwal harus dipilih',
+            'jadwal_id.exists' => 'Jadwal tidak valid',
             'tanggal.required' => 'Tanggal harus diisi',
             'status.required' => 'Status absensi harus dipilih',
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $jadwal = Jadwal::find($this->jadwal_id);
+
+            if (!$jadwal) {
+                $validator->errors()->add('jadwal_id', 'Jadwal tidak ditemukan.');
+            }
+        });
     }
 }

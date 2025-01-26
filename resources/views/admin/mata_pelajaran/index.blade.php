@@ -6,15 +6,6 @@
         </h2>
     </x-slot>
     <div class="container mt-4" style="background-color: #f1f5f9; padding: 20px; border-radius: 8px;">
-                @if (session('success'))
-                    <div class="alert alert-success shadow-lg mb-4">
-                        <div>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            <span>{{ session('success') }}</span>
-                        </div>
-                    </div>
-                @endif
-
                 <div class="card-body">
                     <a href="{{ route('admin.mata_pelajaran.create') }}" class="btn btn-primary mb-4">Tambah Mata Pelajaran</a>
                     <div class="table-responsive" style="overflow-x: auto;">
@@ -50,4 +41,16 @@
                 </div>
         </div>
     </div>
+    @if(session('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: '{{ session("success") }}',
+            showConfirmButton: false,
+            timer: 2000
+        });
+    </script>
+@endif
+
 </x-app-layout>

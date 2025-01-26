@@ -24,9 +24,8 @@
                         <div class="bg-white rounded-lg shadow-md p-4 border border-gray-200">
                             <p class="text-sm text-black">Hari: {{ ucfirst($jadwal->hari) }}</p>
                             <p class="text-sm font-bold text-black">Mata Pelajaran: {{ $jadwal->mataPelajaran->nama }}</p>
-                            {{-- <p class="text-sm text-black">Jam Mulai: {{ $jadwal->jam_mulai->format('H:i') }}</p>
-                            <p class="text-sm text-black">Jam Mulai: {{ $jadwal->jam_selesai->format('H:i') }}</p> --}}
-
+                            <p class="text-sm text-black">Kelas: {{ $jadwal->kelas }}</p>
+                            <p class="text-sm text-black">Jam: {{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }}</p>
                             <p class="text-sm text-black">Guru: {{ $jadwal->guru->name }}</p>
                             <div class="mt-4">
                                 <a href="{{ route('admin.jadwal.edit', $jadwal) }}" class="btn btn-warning bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg shadow-md">
@@ -46,4 +45,16 @@
                     @endforelse
                 </div>
             </div>
+            @if(session('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: '{{ session("success") }}',
+            showConfirmButton: false,
+            timer: 2000
+        });
+    </script>
+@endif
+
 </x-app-layout>
