@@ -18,6 +18,9 @@ class RegisteredGuruController extends Controller
      */
     public function create()
     {
+        if (!Auth::check()) {
+            return redirect()->route('login'); // Redirect ke halaman login jika belum login
+        }
         return view('auth.gururegister'); // Pastikan view ini ada
     }
 

@@ -12,20 +12,32 @@ use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\MataPelajaranController;
 use App\Http\Controllers\HistoryAbsensiController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\KepalaYayasanController;
+use App\Http\Controllers\GuruEditController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('auth.gurulogin');
+    return view ('auth.gurulogin');
 });
 
 // Route::get('/login', function () {
 //     return view('auth.login');
 // });
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/kepala-yayasan/dashboard', [KepalaYayasanController::class, 'index'])->name('kepala_yayasan.dashboard');
+});
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::middleware(['auth:guru'])->group(function () {
+    Route::get('/guru/edit', [GuruEditController::class, 'edit'])->name('guru.edit');
+    Route::post('/guru/update', [GuruEditController::class, 'update'])->name('guru.update');
 });
 
 
@@ -42,7 +54,7 @@ Route::prefix('admin/absensi')->middleware('auth')->group(function () {
 
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('guru', GuruController::class);
-    });
+});
 
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('jadwal', JadwalController::class);
@@ -53,9 +65,15 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
 });
 
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function() {
+    Route::resource('admin', AdminController::class);
+});
+
 Route::get('/dashboard', [DashboardController::class, 'dashboard'])->middleware('auth')->name('dashboard');
 
-
+Route::middleware(['auth'])->group(function () {
+    Route::resource('admin', AdminController::class);
+});
 
 
 Route::middleware(['auth:guru'])->prefix('guru')->name('guru.')->group(function () {

@@ -1,17 +1,17 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-2xl font-semibold text-black">
-            {{ __('Data Guru') }}
+            {{ __('Data Admin') }}
         </h2>
     </x-slot>
     <div class="container mx-auto px-4 py-6">
         {{-- Header --}}
         <div class="flex justify-between items-center mb-6">
-            <a href="{{ route('admin.guru.create') }}" class="btn btn-primary">
+            <a href="{{ route('admin.create') }}" class="btn btn-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
                 </svg>
-                Tambah Guru
+                Tambah Admin
             </a>
         </div>
 
@@ -35,31 +35,24 @@
                             <tr>
                                 <th class="px-4 py-2 text-left text-black">Nama</th>
                                 <th class="px-4 py-2 text-left text-black">Email</th>
-                                <th class="px-4 py-2 text-left text-black">Pendidikan Terakhir</th>
-                                <th class="px-4 py-2 text-left text-black">Alamat</th>
-                                <th class="px-4 py-2 text-left text-black">Jurusan</th>
                                 <th class="px-4 py-2 text-center text-black">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($gurus as $guru)
-                                <td class="align-middle px-4 py-2 text-black">{{ $guru->name }}</td>
-                                <td class="align-middle px-4 py-2 text-black">{{ $guru->email }}</td>
-                                <td class="align-middle px-4 py-2 text-black">{{ $guru->pendidikan_terakhir }}</td>
-                                <td class="align-middle px-4 py-2 text-black">{{ $guru->alamat }}</td>
-                                <td class="align-middle px-4 py-2 text-black">{{ $guru->jurusan }}</td>
+                            @forelse($users as $user)
+                                <td class="align-middle px-4 py-2 text-black">{{ $user->name }}</td>
+                                <td class="align-middle px-4 py-2 text-black">{{ $user->email }}</td>
                                 <td class="text-center align-middle px-4 py-2">
-                                    <a href="{{ route('admin.guru.show', $guru) }}" class="btn btn-warning btn-sm mx- 1" style="font-weight: bold; color: black; background-color: white; border-color: #4a5568;" onmouseover="this.style.background='yellow'; this.style.borderColor='yellow';" onmouseout="this.style.background='white'; this.style.borderColor='black'">
+                                    <a href="{{ route('admin.admin.show', $user) }}" class="btn btn-warning btn-sm mx- 1" style="font-weight: bold; color: black; background-color: white; border-color: #4a5568;" onmouseover="this.style.background='yellow'; this.style.borderColor='yellow';" onmouseout="this.style.background='white'; this.style.borderColor='black'">
                                         <i class="fas fa-edit"></i> Detail
                                     </a>
-                                    <form action="{{ route('admin.guru.destroy', $guru) }}" method="POST" style="display:inline;">
+                                    <form action="{{ route('admin.destroy', $user) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm mx-1" style="background-color: white; border-color: #4a5568; font-weight: bold; color: black;" onmouseover="this.style.background='red'; this.style.borderColor='red';" onmouseout="this.style.background='white'; this.style.borderColor='black';" onclick="return confirm('Are you sure you want to delete this item?')" style="font-weight: bold;">
                                             <i class="fas fa-trash"></i> Hapus
                                         </button>
                                     </form>
-                                </td>
                             </tr>
                             @empty
                                 <tr>
@@ -69,7 +62,7 @@
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-6 h-6 mx-2 stroke-current">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                                 </svg>
-                                                <label>Tidak ada data guru</label>
+                                                <label>Tidak ada data admin</label>
                                             </div>
                                         </div>
                                     </td>

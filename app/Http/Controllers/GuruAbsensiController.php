@@ -45,81 +45,70 @@ class GuruAbsensiController extends Controller
      * - Penyimpanan foto (opsional)
      */
     public function absen(Request $request)
-    {
-        // Validasi input yang diterima
-        $request->validate([
-            // Pastikan jadwal_id ada dan valid
-            'jadwal_id' => 'required|exists:jadwals,id',
-            // Validasi foto jam keluar (opsional)
-            'foto_jam_keluar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+{
+    $request->validate([
+        'jadwal_id' => 'required|exists:jadwals,id',
+        'foto_jam_keluar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    $todayDate = Carbon::now('Asia/Jakarta')->toDateString();
+    $currentTime = Carbon::now('Asia/Jakarta')->toTimeString();
+    $jadwalId = $request->jadwal_id;
+
+    // Cek apakah jadwal milik guru yang sedang login
+    $jadwal = Jadwal::where('id', $jadwalId)
+        ->where('guru_id', Auth::id())
+        ->first();
+
+    if (!$jadwal) {
+        return redirect()->back()->with('error', 'Jadwal tidak ditemukan atau bukan milik Anda!');
+    }
+
+    // Cek apakah sudah ada absensi untuk jadwal ini hari ini
+    $absensi = Absensi::where('guru_id', Auth::id())
+        ->where('jadwal_id', $jadwalId)
+        ->where('tanggal', $todayDate)
+        ->first();
+
+    // Cek apakah guru terlambat
+    $jamMulaiJadwal = Carbon::parse($jadwal->jam_mulai);
+    $statusMasuk = $currentTime > $jamMulaiJadwal->toTimeString() ? 'terlambat' : 'hadir';
+
+    if (!$absensi) {
+        Absensi::create([
+            'guru_id' => Auth::id(),
+            'jadwal_id' => $jadwalId,
+            'tanggal' => $todayDate,
+            'status_masuk' => $statusMasuk, // Bisa 'hadir' atau 'telat'
+            'jam_masuk' => $currentTime,
         ]);
 
-        // Dapatkan tanggal dan waktu saat ini
-        $todayDate = Carbon::now('Asia/Jakarta')->toDateString();
-        $currentTime = Carbon::now('Asia/Jakarta')->toTimeString();
-        $jadwalId = $request->jadwal_id;
-
-        // Cek apakah jadwal milik guru yang sedang login
-        $jadwal = Jadwal::where('id', $jadwalId)
-            ->where('guru_id', Auth::id())
-            ->first();
-
-        // Jika jadwal tidak ditemukan, kembalikan error
-        if (!$jadwal) {
-            return redirect()->back()->with('error', 'Jadwal tidak ditemukan atau bukan milik Anda!');
+        return redirect()->back()->with('message', 'Absensi masuk berhasil dicatat dengan status: ' . $statusMasuk);
+    } elseif (!$absensi->jam_keluar) {
+        if (!$request->hasFile('foto_jam_keluar')) {
+            return redirect()->back()->with('error', 'Anda harus mengunggah foto sebelum melakukan absensi keluar.');
         }
 
-        // Cek apakah sudah ada absensi untuk jadwal ini hari ini
-        $absensi = Absensi::where('guru_id', Auth::id())
-            ->where('jadwal_id', $jadwalId)
-            ->where('tanggal', $todayDate)
-            ->first();
-
-        // Jika belum ada absensi, buat absensi masuk
-        if (!$absensi) {
-            Absensi::create([
-                'guru_id' => Auth::id(),
-                'jadwal_id' => $jadwalId,
-                'tanggal' => $todayDate,
-                'status_masuk' => 'hadir',
-                'jam_masuk' => $currentTime,
-            ]);
-
-            return redirect()->back()->with('message', 'Absensi masuk berhasil dicatat untuk jadwal ini!');
-        }
-        // Jika absensi sudah ada tapi belum jam keluar, proses absensi keluar
-        elseif (!$absensi->jam_keluar) {
-            $fotoPath = null;
-
-            // Pastikan file foto diunggah
-            if (!$request->hasFile('foto_jam_keluar')) {
-                return redirect()->back()->with('error', 'Anda harus mengunggah foto sebelum melakukan absensi keluar.');
-            }
-
-            // Proses upload foto jam keluar
-            if ($request->file('foto_jam_keluar')->isValid()) {
-                // Log informasi file yang diupload
-                Log::info('File uploaded: ' . $request->file('foto_jam_keluar')->getClientOriginalName());
-
-                // Simpan file foto
-                $file = $request->file('foto_jam_keluar');
-                $fotoPath = $file->store('foto_jam_keluar');
-                $fotoPath = str_replace('public/', '', $fotoPath);
-            } else {
-                return redirect()->back()->with('error', 'File foto tidak valid.');
-            }
-
-            // Update absensi dengan jam keluar dan foto
-            $absensi->update([
-                'jam_keluar' => $currentTime,
-                'status_keluar' => 'selesai',
-                'foto_keluar' => $fotoPath,
-            ]);
-
-            return redirect()->back()->with('message', 'Absensi keluar berhasil dicatat untuk jadwal ini!');
+        $fotoPath = null;
+        if ($request->file('foto_jam_keluar')->isValid()) {
+            Log::info('File uploaded: ' . $request->file('foto_jam_keluar')->getClientOriginalName());
+            $file = $request->file('foto_jam_keluar');
+            $fotoPath = $file->store('foto_jam_keluar');
+            $fotoPath = str_replace('public/', '', $fotoPath);
+        } else {
+            return redirect()->back()->with('error', 'File foto tidak valid.');
         }
 
-        // Jika absensi sudah lengkap, kembalikan pesan
-        return redirect()->back()->with('message', 'Anda sudah menyelesaikan absensi untuk jadwal ini!');
+        $absensi->update([
+            'jam_keluar' => $currentTime,
+            'status_keluar' => 'selesai',
+            'foto_keluar' => $fotoPath,
+        ]);
+
+        return redirect()->back()->with('message', 'Absensi keluar berhasil dicatat!');
     }
+
+    return redirect()->back()->with('message', 'Anda sudah menyelesaikan absensi untuk jadwal ini!');
+}
+
 }

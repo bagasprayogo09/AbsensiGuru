@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Guru;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\Crypt;
 class GuruController extends Controller
 {
     public function index()
@@ -32,42 +31,49 @@ class GuruController extends Controller
         ]);
 
         // Hash password sebelum menyimpan
-        $validatedData['password'] = Hash::make($validatedData['password']);
-
+        $validatedData['password'] = Crypt::encryptString($validatedData['password']);
         Guru::create($validatedData);
 
         return redirect()->route('admin.guru.index')
             ->with('success', 'Guru berhasil ditambahkan');
     }
 
-    public function edit(Guru $guru)
-    {
-        return view('admin.guru.edit', compact('guru'));
-    }
+    public function show(Guru $guru)
+{
+    // Decrypt password untuk ditampilkan
+    $password = Crypt::decryptString($guru->password);
 
-    public function update(Request $request, Guru $guru)
-    {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:225',
-            'email' => 'required|email|unique:gurus,email,'.$guru->id,
-            'password' => 'nullable|string|min:8|confirmed',
-            'pendidikan_terakhir' => 'required|string|max:225',
-            'alamat' => 'required|string|max:225',
-            'jurusan' => 'required|string|max:225' // Added validation for jurusan
-        ]);
+    return view('admin.guru.show', compact('guru', 'password'));
+}
 
-        // Hanya update password jika diisi
-        if ($request->filled('password')) {
-            $validatedData['password'] = Hash::make($request->password);
-        } else {
-            unset($validatedData['password']);
-        }
+    // public function edit(Guru $guru)
+    // {
+    //     return view('admin.guru.edit', compact('guru'));
+    // }
 
-        $guru->update($validatedData);
+    // public function update(Request $request, Guru $guru)
+    // {
+    //     $validatedData = $request->validate([
+    //         'name' => 'required|string|max:225',
+    //         'email' => 'required|email|unique:gurus,email,'.$guru->id,
+    //         'password' => 'nullable|string|min:8|confirmed',
+    //         'pendidikan_terakhir' => 'required|string|max:225',
+    //         'alamat' => 'required|string|max:225',
+    //         'jurusan' => 'required|string|max:225' // Added validation for jurusan
+    //     ]);
 
-        return redirect()->route('admin.guru.index')
-            ->with('success', 'Data guru berhasil diupdate');
-    }
+    //     // Hanya update password jika diisi
+    //     if ($request->filled('password')) {
+    //         $validatedData['password'] = Crypt::encryptString($request->password);
+    //     } else {
+    //         unset($validatedData['password']);
+    //     }
+
+    //     $guru->update($validatedData);
+
+    //     return redirect()->route('admin.guru.index')
+    //         ->with('success', 'Data guru berhasil diupdate');
+    // }
 
     public function destroy(Guru $guru)
     {
